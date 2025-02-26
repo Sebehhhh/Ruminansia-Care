@@ -10,28 +10,30 @@
                     </a>
                 </li>
 
-                <!-- MASTER DATA -->
-                <li class="menu-title">Master Data</li>
-                <li class="{{ Request::routeIs('diseases.index') ? 'active' : '' }}">
-                    <a href="{{ route('diseases.index') }}">
-                        <i class="menu-icon fa fa-bug"></i> Penyakit
-                    </a>
-                </li>
-                <li class="{{ Request::routeIs('symptoms.index') ? 'active' : '' }}">
-                    <a href="{{ route('symptoms.index') }}">
-                        <i class="menu-icon fa fa-list-alt"></i> Gejala
-                    </a>
-                </li>
+                <!-- MASTER DATA (Hanya Admin) -->
+                @if (Auth::check() && Auth::user()->is_admin)
+                    <li class="menu-title">Master Data</li>
+                    <li class="{{ Request::routeIs('diseases.index') ? 'active' : '' }}">
+                        <a href="{{ route('diseases.index') }}">
+                            <i class="menu-icon fa fa-bug"></i> Penyakit
+                        </a>
+                    </li>
+                    <li class="{{ Request::routeIs('symptoms.index') ? 'active' : '' }}">
+                        <a href="{{ route('symptoms.index') }}">
+                            <i class="menu-icon fa fa-list-alt"></i> Gejala
+                        </a>
+                    </li>
 
-                <!-- SISTEM PAKAR -->
-                <li class="menu-title">Sistem Pakar</li>
-                <li class="{{ Request::routeIs('rules.index') ? 'active' : '' }}">
-                    <a href="{{ route('rules.index') }}">
-                        <i class="menu-icon fa fa-cogs"></i> Kelola Aturan
-                    </a>
-                </li>
+                    <!-- SISTEM PAKAR (Hanya Admin) -->
+                    <li class="menu-title">Sistem Pakar</li>
+                    <li class="{{ Request::routeIs('rules.index') ? 'active' : '' }}">
+                        <a href="{{ route('rules.index') }}">
+                            <i class="menu-icon fa fa-cogs"></i> Kelola Aturan
+                        </a>
+                    </li>
+                @endif
 
-                <!-- DIAGNOSA -->
+                <!-- DIAGNOSA (Bisa Diakses Semua User) -->
                 <li class="menu-title">Diagnosa</li>
                 <li class="{{ Request::routeIs('history.index') ? 'active' : '' }}">
                     <a href="{{ route('history.index') }}">
@@ -39,13 +41,15 @@
                     </a>
                 </li>
 
-                <!-- PENGGUNA & ADMIN -->
-                <li class="menu-title">Manajemen</li>
-                <li class="{{ Request::routeIs('users.index') ? 'active' : '' }}">
-                    <a href="{{ route('users.index') }}">
-                        <i class="menu-icon fa fa-users"></i> Pengguna
-                    </a>
-                </li>
+                <!-- PENGGUNA & ADMIN (Hanya Admin) -->
+                @if (Auth::check() && Auth::user()->is_admin)
+                    <li class="menu-title">Manajemen</li>
+                    <li class="{{ Request::routeIs('users.index') ? 'active' : '' }}">
+                        <a href="{{ route('users.index') }}">
+                            <i class="menu-icon fa fa-users"></i> Pengguna
+                        </a>
+                    </li>
+                @endif
 
             </ul>
         </div><!-- /.navbar-collapse -->
