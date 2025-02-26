@@ -6,13 +6,22 @@
     <div class="container mt-4">
         <h3>Manajemen Pengguna</h3>
 
+        <!-- SweetAlert Notifikasi -->
         @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses!',
+                        text: "{{ session('success') }}",
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                });
+            </script>
         @endif
 
-        <!-- Tombol tambah pengguna dengan icon saja -->
+        <!-- Tombol tambah pengguna dengan icon -->
         <a href="{{ route('users.create') }}" class="btn btn-primary mb-3 mt-3 btn-icon" title="Tambah Pengguna">
             <i class="fa fa-plus"></i>
         </a>
@@ -38,14 +47,18 @@
                                 title="Edit">
                                 <i class="fa fa-pencil"></i>
                             </a>
-                            <!-- Tombol hapus dengan icon -->
-                            <form action="{{ route('users.destroy', $user->encrypted_id) }}" method="POST" class="d-inline"
-                                onsubmit="return confirm('Yakin ingin menghapus pengguna ini?');">
+
+                            <!-- Tombol hapus dengan SweetAlert -->
+                            <button class="btn btn-sm btn-danger btn-icon delete-btn" title="Hapus"
+                                data-id="{{ $user->encrypted_id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+
+                            <!-- Form delete (hidden, akan dikirim lewat JS) -->
+                            <form id="delete-form-{{ $user->encrypted_id }}"
+                                action="{{ route('users.destroy', $user->encrypted_id) }}" method="POST" class="d-none">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-danger btn-icon" title="Hapus">
-                                    <i class="fa fa-trash"></i>
-                                </button>
                             </form>
                         </td>
                     </tr>
@@ -58,4 +71,31 @@
             {{ $users->links('pagination::bootstrap-4') }}
         </div>
     </div>
+
+    <!-- SweetAlert Script -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Konfirmasi hapus dengan SweetAlert
+            document.querySelectorAll(".delete-btn").forEach(button => {
+                button.addEventListener("click", function() {
+                    const userId = this.getAttribute("data-id");
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: "Data pengguna akan dihapus permanen!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Ya, Hapus!',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById(`delete-form-${userId}`).submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 @endsection

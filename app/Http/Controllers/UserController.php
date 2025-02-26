@@ -51,7 +51,7 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('users.index')
-                         ->with('success', 'Pengguna berhasil ditambahkan.');
+            ->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
     /**
@@ -84,7 +84,7 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email,'.$user->id,
+            'email'    => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
         ]);
 
@@ -96,7 +96,7 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('users.index')
-                         ->with('success', 'Pengguna berhasil diperbarui.');
+            ->with('success', 'Pengguna berhasil diperbarui.');
     }
 
     /**
@@ -109,6 +109,6 @@ class UserController extends Controller
         $user->delete();
 
         return redirect()->route('users.index')
-                         ->with('success', 'Pengguna berhasil dihapus.');
+            ->with('success', 'Pengguna berhasil dihapus.');
     }
 }
