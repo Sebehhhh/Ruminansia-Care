@@ -2,63 +2,112 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Rule;
+use App\Models\Disease;
+use App\Models\Symptom;
 use Illuminate\Http\Request;
 
 class RuleController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar rule dengan paginasi.
      */
     public function index()
     {
-        //
+        // Mengambil data rule terbaru dengan paginasi 5 per halaman
+        $rules = Rule::latest()->paginate(5);
+
+        // Menambahkan properti encrypted_id pada setiap rule
+        foreach ($rules as $rule) {
+            $rule->encrypted_id = encrypt($rule->id);
+        }
+
+        return view('rules.index', compact('rules'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form untuk membuat rule baru.
      */
     public function create()
     {
-        //
+        // Mengambil data penyakit dan gejala untuk dropdown
+        $diseases = Disease::all();
+        $symptoms = Symptom::all();
+        return view('rules.create', compact('diseases', 'symptoms'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan data rule baru ke database.
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'disease_id' => 'required|exists:diseases,id',
+            'symptom_id' => 'required|exists:symptoms,id',
+            'mb'         => 'required|numeric|min:0|max:1',
+            'md'         => 'required|numeric|min:0|max:1',
+        ]);
+
+        Rule::create($validated);
+
+        return redirect()->route('rules.index')
+            ->with('success', 'Rule berhasil ditambahkan.');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan detail rule berdasarkan ID yang telah dienkripsi.
      */
-    public function show(string $id)
+    public function show(string $encryptedId)
     {
-        //
+        $id = decrypt($encryptedId);
+        $rule = Rule::findOrFail($id);
+        return view('rules.show', compact('rule'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Menampilkan form untuk mengedit rule.
      */
-    public function edit(string $id)
+    public function edit(string $encryptedId)
     {
-        //
+        $id = decrypt($encryptedId);
+        $rule = Rule::findOrFail($id);
+        $diseases = Disease::all();
+        $symptoms = Symptom::all();
+
+        return view('rules.edit', compact('rule', 'diseases', 'symptoms'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Memperbarui data rule berdasarkan ID yang telah dienkripsi.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $encryptedId)
     {
-        //
+        // $id = decrypt($encryptedId);
+        $rule = Rule::findOrFail($encryptedId);
+
+        $validated = $request->validate([
+            'disease_id' => 'required|exists:diseases,id',
+            'symptom_id' => 'required|exists:symptoms,id',
+            'mb'         => 'required|numeric|min:0|max:1',
+            'md'         => 'required|numeric|min:0|max:1',
+        ]);
+
+        $rule->update($validated);
+
+        return redirect()->route('rules.index')
+            ->with('success', 'Rule berhasil diperbarui.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Menghapus rule berdasarkan ID yang telah dienkripsi.
      */
-    public function destroy(string $id)
+    public function destroy(string $encryptedId)
     {
-        //
+        $id = decrypt($encryptedId);
+        $rule = Rule::findOrFail($id);
+        $rule->delete();
+
+        return redirect()->route('rules.index')
+            ->with('success', 'Rule berhasil dihapus.');
     }
 }

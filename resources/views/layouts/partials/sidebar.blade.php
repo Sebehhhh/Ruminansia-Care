@@ -25,7 +25,7 @@
                 <!-- Kelola Rule (Sistem Pakar) -->
                 <li class="{{ Request::routeIs('rules.index') ? 'active' : '' }}">
                     <a href="{{ route('rules.index') }}">
-                        <i class="menu-icon fa fa-cogs"></i>Kelola Rule (Sistem Pakar)
+                        <i class="menu-icon fa fa-cogs"></i>Kelola Aturan 
                     </a>
                 </li>
 
