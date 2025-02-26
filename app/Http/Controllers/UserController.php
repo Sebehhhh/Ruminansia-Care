@@ -79,8 +79,8 @@ class UserController extends Controller
      */
     public function update(Request $request, string $encryptedId)
     {
-        $id = decrypt($encryptedId);
-        $user = User::findOrFail($id);
+        // $id = decrypt($encryptedId);
+        $user = User::findOrFail($encryptedId);
 
         $validated = $request->validate([
             'name'     => 'required|string|max:255',
