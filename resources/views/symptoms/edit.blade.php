@@ -1,4 +1,5 @@
 @extends('layouts.master')
+@section('title', 'Edit Gejala')
 
 @section('content')
     <div class="container">

@@ -16,27 +16,21 @@ use App\Http\Controllers\UserController;
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
-
     Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
     Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
-
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
-
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
-
 Route::middleware(['auth', 'isadmin'])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('diseases', DiseaseController::class)->except(['show']);
     Route::resource('symptoms', SymptomController::class)->except(['show']);
     Route::resource('rules', RuleController::class)->except(['show']);
 });
-
 Route::middleware('auth')->group(function () {
     Route::resource('history', HistoryController::class);
-
     Route::get('/diagnosis', [DiagnosisController::class, 'index'])->name('diagnosis');
     Route::post('/diagnosis/process', [DiagnosisController::class, 'process'])->name('diagnosis.process');
 });

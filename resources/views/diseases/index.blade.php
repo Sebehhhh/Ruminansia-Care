@@ -1,5 +1,6 @@
 @extends('layouts.master')
-
+@section('title', 'Daftar Penyakit')
+    
 @section('content')
     <div class="container">
         <h3 class="mb-4">Daftar Penyakit</h3>

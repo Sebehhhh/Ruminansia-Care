@@ -1,4 +1,5 @@
 @extends('layouts.master')
+@section('title', 'Tambah Penyakit')
 
 @section('content')
     <div class="container">
