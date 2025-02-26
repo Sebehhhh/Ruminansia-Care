@@ -3,7 +3,7 @@
 @section('title', 'Manajemen Rule')
 
 @section('content')
-    <div class="container mt-4">
+    <div class="container ">
         <h3>Daftar Aturan</h3>
 
         <!-- Tombol tambah rule dengan icon -->

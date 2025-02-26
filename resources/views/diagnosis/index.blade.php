@@ -3,7 +3,7 @@
 @section('title', 'Diagnosis Ternak Ruminansia')
 
 @section('content')
-    <div class="container mt-4">
+    <div class="container ">
         <h3 class="mb-4">Diagnosis Ternak Ruminansia</h3>
         <p>Silakan pilih kategori ruminansia terlebih dahulu, kemudian pilih gejala yang dialami ternak Anda dan tentukan
             tingkat keyakinan untuk setiap gejala.</p>

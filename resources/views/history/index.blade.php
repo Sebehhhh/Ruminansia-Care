@@ -3,7 +3,7 @@
 @section('title', 'Riwayat Diagnosa')
 
 @section('content')
-    <div class="container mt-4">
+    <div class="container ">
         <h3 class="mb-4">Riwayat Diagnosa</h3>
 
         <!-- SweetAlert Notifikasi -->

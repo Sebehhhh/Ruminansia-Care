@@ -3,7 +3,7 @@
 @section('title', 'Manajemen Pengguna')
 
 @section('content')
-    <div class="container mt-4">
+    <div class="container ">
         <h3>Manajemen Pengguna</h3>
 
         <!-- SweetAlert Notifikasi -->
