@@ -3,7 +3,7 @@
         <div id="main-menu" class="main-menu collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <!-- Dashboard -->
-                <li class="active">
+                <li class="{{ Request::routeIs('dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}">
                         <i class="menu-icon fa fa-laptop"></i>Dashboard
                     </a>
@@ -11,33 +11,33 @@
 
                 <!-- Master Data -->
                 <li class="menu-title">Master Data</li>
-                <li>
+                <li class="{{ Request::routeIs('diseases.index') ? 'active' : '' }}">
                     <a href="{{ route('diseases.index') }}">
                         <i class="menu-icon fa fa-bug"></i>Data Penyakit
                     </a>
                 </li>
-                <li>
+                <li class="{{ Request::routeIs('symptoms.index') ? 'active' : '' }}">
                     <a href="{{ route('symptoms.index') }}">
                         <i class="menu-icon fa fa-list-alt"></i>Data Gejala
                     </a>
                 </li>
 
                 <!-- Kelola Rule (Sistem Pakar) -->
-                <li>
+                <li class="{{ Request::routeIs('rules.index') ? 'active' : '' }}">
                     <a href="{{ route('rules.index') }}">
                         <i class="menu-icon fa fa-cogs"></i>Kelola Rule (Sistem Pakar)
                     </a>
                 </li>
 
                 <!-- Riwayat Diagnosa -->
-                <li>
+                <li class="{{ Request::routeIs('history.index') ? 'active' : '' }}">
                     <a href="{{ route('history.index') }}">
                         <i class="menu-icon fa fa-history"></i>Riwayat Diagnosa
                     </a>
                 </li>
 
                 <!-- Manajemen Pengguna (Opsional) -->
-                <li>
+                <li class="{{ Request::routeIs('users.index') ? 'active' : '' }}">
                     <a href="{{ route('users.index') }}">
                         <i class="menu-icon fa fa-users"></i>Manajemen Pengguna
                     </a>
