@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container mt-4">
-        <h1>Manajemen Pengguna</h1>
+        <h3>Manajemen Pengguna</h3>
 
         @if (session('success'))
             <div class="alert alert-success">
@@ -13,7 +13,7 @@
         @endif
 
         <!-- Tombol tambah pengguna dengan icon saja -->
-        <a href="{{ route('users.create') }}" class="btn btn-primary mb-3 btn-icon" title="Tambah Pengguna">
+        <a href="{{ route('users.create') }}" class="btn btn-primary mb-3 mt-3 btn-icon" title="Tambah Pengguna">
             <i class="fa fa-plus"></i>
         </a>
 
