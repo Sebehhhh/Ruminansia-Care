@@ -8,7 +8,7 @@
 
         <!-- Tombol tambah rule dengan icon -->
         <a href="{{ route('rules.create') }}" class="btn btn-primary mb-3 mt-3 btn-icon" title="Tambah Rule">
-            <i class="fa fa-plus"></i> 
+            <i class="fa fa-plus"></i>
         </a>
 
         <!-- SweetAlert Notifikasi -->
@@ -25,50 +25,54 @@
                 });
             </script>
         @endif
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Penyakit</th>
+                            <th>Gejala</th>
+                            <th>MB</th>
+                            <th>MD</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($rules as $index => $rule)
+                            <tr>
+                                <td>{{ $rules->firstItem() + $index }}</td>
+                                <td>{{ $rule->disease->name ?? 'N/A' }}</td>
+                                <td>{{ $rule->symptom->name ?? 'N/A' }}</td>
+                                <td>{{ $rule->mb }}</td>
+                                <td>{{ $rule->md }}</td>
+                                <td>
+                                    <!-- Tombol edit dengan icon -->
+                                    <a href="{{ route('rules.edit', $rule->encrypted_id) }}"
+                                        class="btn btn-sm btn-warning btn-icon" title="Edit">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Penyakit</th>
-                    <th>Gejala</th>
-                    <th>MB</th>
-                    <th>MD</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($rules as $index => $rule)
-                    <tr>
-                        <td>{{ $rules->firstItem() + $index }}</td>
-                        <td>{{ $rule->disease->name ?? 'N/A' }}</td>
-                        <td>{{ $rule->symptom->name ?? 'N/A' }}</td>
-                        <td>{{ $rule->mb }}</td>
-                        <td>{{ $rule->md }}</td>
-                        <td>
-                            <!-- Tombol edit dengan icon -->
-                            <a href="{{ route('rules.edit', $rule->encrypted_id) }}" class="btn btn-sm btn-warning btn-icon"
-                                title="Edit">
-                                <i class="fa fa-pencil"></i>
-                            </a>
+                                    <!-- Tombol hapus dengan SweetAlert -->
+                                    <button class="btn btn-sm btn-danger btn-icon delete-btn" title="Hapus"
+                                        data-id="{{ $rule->encrypted_id }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
 
-                            <!-- Tombol hapus dengan SweetAlert -->
-                            <button class="btn btn-sm btn-danger btn-icon delete-btn" title="Hapus"
-                                data-id="{{ $rule->encrypted_id }}">
-                                <i class="fa fa-trash"></i>
-                            </button>
-
-                            <!-- Form delete (hidden, akan dikirim lewat JS) -->
-                            <form id="delete-form-{{ $rule->encrypted_id }}"
-                                action="{{ route('rules.destroy', $rule->encrypted_id) }}" method="POST" class="d-none">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                                    <!-- Form delete (hidden, akan dikirim lewat JS) -->
+                                    <form id="delete-form-{{ $rule->encrypted_id }}"
+                                        action="{{ route('rules.destroy', $rule->encrypted_id) }}" method="POST"
+                                        class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <!-- Tampilkan link paginasi -->
         <div class="mt-3">

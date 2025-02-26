@@ -2,9 +2,7 @@
     <div class="top-left">
         <div class="navbar-header">
             <a class="navbar-brand" href="{{ route('dashboard') }}">Ruminansia-Care</a>
-            <a class="navbar-toggler" data-toggle="collapse" data-target="#main-menu">
-                <i class="fa fa-bars"></i>
-            </a>
+            <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
         </div>
     </div>
 

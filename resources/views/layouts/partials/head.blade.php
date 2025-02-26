@@ -82,4 +82,6 @@
     #cellPaiChart {
         height: 160px;
     }
+
+    
 </style>

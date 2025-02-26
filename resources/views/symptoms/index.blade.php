@@ -20,41 +20,46 @@
         @endif
 
         <a href="{{ route('symptoms.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i> </a>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kode Gejala</th>
+                            <th>Nama Gejala</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($symptoms as $index => $symptom)
+                            <tr>
+                                <td>{{ $symptoms->firstItem() + $index }}</td>
+                                <td>{{ $symptom->code }}</td>
+                                <td>{{ $symptom->name }}</td>
+                                <td>
+                                    <a href="{{ route('symptoms.edit', encrypt($symptom->id)) }}"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Kode Gejala</th>
-                    <th>Nama Gejala</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($symptoms as $index => $symptom)
-                    <tr>
-                        <td>{{ $symptoms->firstItem() + $index }}</td>
-                        <td>{{ $symptom->code }}</td>
-                        <td>{{ $symptom->name }}</td>
-                        <td>
-                            <a href="{{ route('symptoms.edit', encrypt($symptom->id)) }}" class="btn btn-warning btn-sm">
-                                <i class="fa fa-pencil"></i> 
-                            </a>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $symptom->id }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
 
-                            <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $symptom->id }}">
-                                <i class="fa fa-trash"></i> 
-                            </button>
-
-                            <form id="delete-form-{{ $symptom->id }}"
-                                action="{{ route('symptoms.destroy', $symptom->id) }}" method="POST" class="d-none">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                                    <form id="delete-form-{{ $symptom->id }}"
+                                        action="{{ route('symptoms.destroy', $symptom->id) }}" method="POST"
+                                        class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <div class="mt-3">
             {{ $symptoms->links('pagination::bootstrap-4') }}

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title', 'Daftar Penyakit')
-    
+
 @section('content')
     <div class="container">
         <h3 class="mb-4">Daftar Penyakit</h3>
@@ -21,44 +21,48 @@
         @endif
 
         <a href="{{ route('diseases.create') }}" class="btn btn-primary mb-3"><i class="fa fa-plus"></i></a>
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Penyakit</th>
+                            <th>Deskripsi</th>
+                            <th>Rekomendasi</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($diseases as $index => $disease)
+                            <tr>
+                                <td>{{ $diseases->firstItem() + $index }}</td>
+                                <td>{{ $disease->name }}</td>
+                                <td>{{ $disease->description }}</td>
+                                <td>{{ $disease->recommendation }}</td>
+                                <td>
+                                    <a href="{{ route('diseases.edit', $disease->encrypted_id) }}"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Penyakit</th>
-                    <th>Deskripsi</th>
-                    <th>Rekomendasi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($diseases as $index => $disease)
-                    <tr>
-                        <td>{{ $diseases->firstItem() + $index }}</td>
-                        <td>{{ $disease->name }}</td>
-                        <td>{{ $disease->description }}</td>
-                        <td>{{ $disease->recommendation }}</td>
-                        <td>
-                            <a href="{{ route('diseases.edit', $disease->encrypted_id) }}" class="btn btn-warning btn-sm">
-                                <i class="fa fa-pencil"></i> 
-                            </a>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $disease->encrypted_id }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
 
-                            <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $disease->encrypted_id }}">
-                                <i class="fa fa-trash"></i> 
-                            </button>
-
-                            <form id="delete-form-{{ $disease->encrypted_id }}"
-                                action="{{ route('diseases.destroy', $disease->encrypted_id) }}" method="POST"
-                                class="d-none">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                                    <form id="delete-form-{{ $disease->encrypted_id }}"
+                                        action="{{ route('diseases.destroy', $disease->encrypted_id) }}" method="POST"
+                                        class="d-none">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
         <div class="mt-3">
             {{ $diseases->links('pagination::bootstrap-4') }}
