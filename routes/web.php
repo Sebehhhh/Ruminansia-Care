@@ -54,5 +54,5 @@ Route::middleware(['auth'])->group(function () {
     // ========================
     //      Manajemen Pengguna
     // ========================
-    Route::resource('users', UserController::class)->middleware('admin');
+    Route::resource('users', UserController::class);
 });

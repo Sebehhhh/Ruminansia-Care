@@ -10,14 +10,13 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        // Membuat user admin default
-        User::create([
-            'name'     => 'Administrator',
-            'email'    => 'semab@ruminansia-care.com',
-            'password' => Hash::make('password'), // Ganti 'password' dengan password yang diinginkan
-        ]);
-
-        // Jika ingin menambahkan user dummy lainnya, bisa menggunakan factory (jika sudah ada)
-        // User::factory()->count(10)->create();
+        // Membuat 9 dummy user
+        for ($i = 1; $i <= 9; $i++) {
+            User::create([
+                'name'     => 'Dummy User ' . $i,
+                'email'    => 'dummy' . $i . '@example.com',
+                'password' => Hash::make('password'), // password default: "password"
+            ]);
+        }
     }
 }
