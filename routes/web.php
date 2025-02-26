@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\DiagnosisController;
 use App\Http\Controllers\DiseaseController;
 use App\Http\Controllers\SymptomController;
 use App\Http\Controllers\RuleController;
@@ -43,13 +44,18 @@ Route::middleware(['auth'])->group(function () {
     // ========================
     //      Sistem Pakar
     // ========================
-    // Kelola Rule (Certainty Factor)
     Route::resource('rules', RuleController::class)->except(['show']);
 
     // ========================
     //      Riwayat Diagnosa
     // ========================
-    Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
+    Route::resource('history', HistoryController::class);
+
+    // ========================
+    //      Diagnosa
+    // ========================
+    Route::get('/diagnosis', [DiagnosisController::class, 'index'])->name('diagnosis');
+    Route::post('/diagnosis/process', [DiagnosisController::class, 'process'])->name('diagnosis.process');
 
     // ========================
     //      Manajemen Pengguna

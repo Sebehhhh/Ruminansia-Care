@@ -19,5 +19,7 @@
     </div>
     {{-- Script --}}
     @include('layouts.partials.scripts')
+
+    <a href="{{ route('diagnosis') }}" class="floating-diagnosis">Diagnosis</a>
 </body>
 </html>

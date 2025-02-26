@@ -12,6 +12,7 @@ class CreateHistoryTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('disease_id')->constrained('diseases')->onDelete('cascade');
+            $table->string('category', 50); // Menyimpan kategori ruminansia yang dipilih
             $table->decimal('confidence', 3, 2); // Nilai kepercayaan (0 - 1)
             $table->json('selected_symptoms'); // Gejala yang dipilih saat diagnosa
             $table->timestamps();

@@ -9,8 +9,6 @@ class Disease extends Model
 {
     use HasFactory;
 
-    protected $table = 'diseases'; // Nama tabel sesuai dengan migrasi
-
     protected $fillable = [
         'name',
         'description',
