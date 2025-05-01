@@ -11,6 +11,7 @@ use App\Http\Controllers\SymptomController;
 use App\Http\Controllers\RuleController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AnimalController;
 
 
 Route::middleware('guest')->group(function () {
@@ -25,8 +26,10 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::middleware(['auth', 'isadmin'])->group(function () {
     Route::resource('users', UserController::class);
+    
     Route::resource('diseases', DiseaseController::class)->except(['show']);
     Route::resource('symptoms', SymptomController::class)->except(['show']);
+    Route::resource('animals', AnimalController::class)->except(['show']);
     Route::resource('rules', RuleController::class)->except(['show']);
 });
 Route::middleware('auth')->group(function () {

@@ -13,6 +13,7 @@
                 <!-- MASTER DATA (Hanya Admin) -->
                 @if (Auth::check() && Auth::user()->is_admin)
                     <li class="menu-title">Master Data</li>
+                   
                     <li class="{{ Request::routeIs('diseases.index') ? 'active' : '' }}">
                         <a href="{{ route('diseases.index') }}">
                             <i class="menu-icon fa fa-bug"></i> Penyakit
@@ -21,6 +22,11 @@
                     <li class="{{ Request::routeIs('symptoms.index') ? 'active' : '' }}">
                         <a href="{{ route('symptoms.index') }}">
                             <i class="menu-icon fa fa-list-alt"></i> Gejala
+                        </a>
+                    </li>
+                    <li class="{{ Request::routeIs('animals.index') ? 'active' : '' }}">
+                        <a href="{{ route('animals.index') }}">
+                            <i class="menu-icon fa fa-paw"></i> Hewan
                         </a>
                     </li>
 
