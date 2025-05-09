@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('title', 'Manajemen Pengguna')
+@section('title', 'Manajemen Hewan')
 
 @section('content')
     <div class="container ">
-        <h3>Manajemen Pengguna</h3>
+        <h3>Manajemen Hewan</h3>
 
         <!-- SweetAlert Notifikasi -->
         @if (session('success'))
@@ -21,8 +21,8 @@
             </script>
         @endif
 
-        <!-- Tombol tambah pengguna dengan icon -->
-        <a href="{{ route('users.create') }}" class="btn btn-primary mb-3 mt-3 btn-icon" title="Tambah Pengguna">
+        <!-- Tombol tambah hewan dengan icon -->
+        <a href="{{ route('animals.create') }}" class="btn btn-primary mb-3 mt-3 btn-icon" title="Tambah Hewan">
             <i class="fa fa-plus"></i>
         </a>
         <div class="card">
@@ -31,33 +31,31 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama</th>
-                            <th>Email</th>
+                            <th>Nama Hewan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($users as $index => $user)
+                        @foreach ($animals as $index => $animal)
                             <tr>
-                                <td>{{ $users->firstItem() + $index }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
+                                <td>{{ $animals->firstItem() + $index }}</td>
+                                <td>{{ $animal->name }}</td>
                                 <td>
                                     <!-- Tombol edit dengan icon -->
-                                    <a href="{{ route('users.edit', $user->encrypted_id) }}"
+                                    <a href="{{ route('animals.edit', $animal->encrypted_id) }}"
                                         class="btn btn-sm btn-warning btn-icon" title="Edit">
                                         <i class="fa fa-pencil"></i>
                                     </a>
 
                                     <!-- Tombol hapus dengan SweetAlert -->
                                     <button class="btn btn-sm btn-danger btn-icon delete-btn" title="Hapus"
-                                        data-id="{{ $user->encrypted_id }}">
+                                        data-id="{{ $animal->encrypted_id }}">
                                         <i class="fa fa-trash"></i>
                                     </button>
 
                                     <!-- Form delete (hidden, akan dikirim lewat JS) -->
-                                    <form id="delete-form-{{ $user->encrypted_id }}"
-                                        action="{{ route('users.destroy', $user->encrypted_id) }}" method="POST"
+                                    <form id="delete-form-{{ $animal->encrypted_id }}"
+                                        action="{{ route('animals.destroy', $animal->encrypted_id) }}" method="POST"
                                         class="d-none">
                                         @csrf
                                         @method('DELETE')
@@ -72,7 +70,7 @@
 
         <!-- Tampilkan link paginasi -->
         <div class="mt-3">
-            {{ $users->links('pagination::bootstrap-4') }}
+            {{ $animals->links('pagination::bootstrap-4') }}
         </div>
     </div>
 
@@ -83,10 +81,10 @@
             // Konfirmasi hapus dengan SweetAlert
             document.querySelectorAll(".delete-btn").forEach(button => {
                 button.addEventListener("click", function() {
-                    const userId = this.getAttribute("data-id");
+                    const animalId = this.getAttribute("data-id");
                     Swal.fire({
                         title: 'Yakin ingin menghapus?',
-                        text: "Data pengguna akan dihapus permanen!",
+                        text: "Data hewan akan dihapus permanen!",
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#d33',
@@ -95,7 +93,7 @@
                         cancelButtonText: 'Batal'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            document.getElementById(`delete-form-${userId}`).submit();
+                            document.getElementById(`delete-form-${animalId}`).submit();
                         }
                     });
                 });

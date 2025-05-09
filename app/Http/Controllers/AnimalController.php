@@ -59,8 +59,8 @@ class AnimalController extends Controller
      */
     public function update(Request $request, string $encryptedId)
     {
-        $id = decrypt($encryptedId);
-        $animal = Animal::findOrFail($id);
+        // $id = decrypt($encryptedId);
+        $animal = Animal::findOrFail($encryptedId);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:animals,name,' . $animal->id,
