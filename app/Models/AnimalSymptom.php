@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AnimalSymptom extends Model
 {
+    protected $table = 'animal_symptom';
     protected $fillable = [
         'animal_id',
         'symptom_id',

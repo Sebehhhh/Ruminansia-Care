@@ -3,33 +3,37 @@
 
 @section('content')
     <div class="container">
-        <h3 class="mb-4">Edit Gejala</h3>
+        <h3 class="mb-4">Edit Gejala Hewan: {{ $animal->name }}</h3>
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('symptoms.update', $symptom->id) }}" method="POST">
+                <form action="{{ route('animal_symptoms.update', $animal->id) }}" method="POST">
                     @csrf
                     @method('PUT')
 
                     <div class="mb-3">
-                        <label for="code" class="form-label">Kode Gejala</label>
-                        <input type="text" class="form-control @error('code') is-invalid @enderror" id="code"
-                            name="code" value="{{ old('code', $symptom->code) }}" required>
-                        @error('code')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nama Gejala</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                            name="name" value="{{ old('name', $symptom->name) }}" required>
-                        @error('name')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <label class="form-label">Pilih Gejala</label>
+                        <div class="@error('symptom_ids') is-invalid @enderror">
+                            @foreach ($symptoms as $symptom)
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="symptom_ids[]"
+                                           value="{{ $symptom->id }}"
+                                           id="symptom_{{ $symptom->id }}"
+                                           {{ in_array($symptom->id, $selectedSymptoms) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="symptom_{{ $symptom->id }}">
+                                        {{ $symptom->name }}
+                                    </label>
+                                </div>
+                            @endforeach
+                            @error('symptom_ids')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Simpan</button>
-                    <a href="{{ route('symptoms.index') }}" class="btn btn-secondary">Batal</a>
+                    <a href="{{ route('animal_symptoms.index') }}" class="btn btn-secondary">Batal</a>
                 </form>
             </div>
         </div>
