@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Animal;
 use App\Models\Disease;
 use App\Models\AnimalDisease;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class AnimalDiseaseController extends Controller
@@ -38,18 +39,29 @@ class AnimalDiseaseController extends Controller
         $validated = $request->validate([
             'animal_id'    => 'required|exists:animals,id',
             'disease_ids'  => 'required|array|min:1',
-            'disease_ids.*' => 'exists:diseases,id',
+            'disease_ids.*'=> 'exists:diseases,id',
         ]);
-
-        foreach ($validated['disease_ids'] as $diseaseId) {
-            AnimalDisease::create([
-                'animal_id'  => $validated['animal_id'],
-                'disease_id' => $diseaseId,
-            ]);
+    
+        try {
+            foreach ($validated['disease_ids'] as $diseaseId) {
+                AnimalDisease::create([
+                    'animal_id'  => $validated['animal_id'],
+                    'disease_id' => $diseaseId,
+                ]);
+            }
+    
+            return redirect()->route('animal_diseases.index')
+                ->with('success', 'Data penyakit hewan berhasil ditambahkan.');
+    
+        } catch (QueryException $e) {
+            if ($e->getCode() == 23000) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Data penyakit hewan tersebut sudah pernah ditambahkan.');
+            }
+    
+            throw $e; // lempar ulang jika bukan error duplikat
         }
-
-        return redirect()->route('animal_diseases.index')
-            ->with('success', 'Data penyakit hewan berhasil ditambahkan.');
     }
 
     /**
@@ -101,7 +113,7 @@ class AnimalDiseaseController extends Controller
         $animalDisease = AnimalDisease::findOrFail($id);
         $animalDisease->delete();
 
-        return redirect()->route('animal-diseases.index')
+        return redirect()->route('animal_diseases.index')
             ->with('success', 'Data penyakit hewan berhasil dihapus.');
     }
 }

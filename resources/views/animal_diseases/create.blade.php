@@ -3,6 +3,17 @@
 
 @section('content')
 <div class="container">
+    @if (session('error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+            });
+        });
+    </script>
+@endif
     <h3 class="mb-4">Tambah Penyakit Hewan</h3>
     <div class="card">
         <div class="card-body">
@@ -51,4 +62,5 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
