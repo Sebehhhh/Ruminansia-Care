@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Rule extends Model
+class AnimalDisease extends Model
 {
+    protected $table = 'animal_disease';
     protected $fillable = [
+        'animal_id',
         'disease_id',
-        'symptom_id',
-        'mb',
-        'md'
+        // 'notes',
     ];
+
     public function animal()
     {
         return $this->belongsTo(Animal::class);
@@ -20,9 +21,5 @@ class Rule extends Model
     public function disease()
     {
         return $this->belongsTo(Disease::class);
-    }
-    public function symptom()
-    {
-        return $this->belongsTo(Symptom::class);
     }
 }

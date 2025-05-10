@@ -4,23 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Rule extends Model
+class AnimalSymptom extends Model
 {
     protected $fillable = [
-        'disease_id',
+        'animal_id',
         'symptom_id',
-        'mb',
-        'md'
+        'notes',
     ];
+
     public function animal()
     {
         return $this->belongsTo(Animal::class);
     }
 
-    public function disease()
-    {
-        return $this->belongsTo(Disease::class);
-    }
     public function symptom()
     {
         return $this->belongsTo(Symptom::class);

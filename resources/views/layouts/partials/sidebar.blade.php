@@ -30,8 +30,17 @@
                         </a>
                     </li>
 
-                    <!-- SISTEM PAKAR (Hanya Admin) -->
-                    <li class="menu-title">Sistem Pakar</li>
+                    <li class="menu-title">Pivot Data</li>
+                    <li class="{{ Request::routeIs('animal_symptoms.index') ? 'active' : '' }}">
+                        <a href="{{ route('animal_symptoms.index') }}">
+                            <i class="menu-icon fa fa-stethoscope"></i> Gejala Hewan
+                        </a>
+                    </li>
+                    <li class="{{ Request::routeIs('animal_diseases.index') ? 'active' : '' }}">
+                        <a href="{{ route('animal_diseases.index') }}">
+                            <i class="menu-icon fa fa-medkit"></i> Penyakit Hewan
+                        </a>
+                    </li>
                     <li class="{{ Request::routeIs('rules.index') ? 'active' : '' }}">
                         <a href="{{ route('rules.index') }}">
                             <i class="menu-icon fa fa-cogs"></i> Kelola Aturan
