@@ -50,6 +50,11 @@
 
                 <!-- DIAGNOSA (Bisa Diakses Semua User) -->
                 <li class="menu-title">Diagnosa</li>
+                <li class="{{ Request::routeIs('diagnosis') ? 'active' : '' }}">
+                    <a href="{{ route('diagnosis') }}">
+                        <i class="menu-icon fa fa-search"></i> Diagnosa Sekarang
+                    </a>
+                </li>
                 <li class="{{ Request::routeIs('history.index') ? 'active' : '' }}">
                     <a href="{{ route('history.index') }}">
                         <i class="menu-icon fa fa-history"></i> Riwayat Diagnosa
