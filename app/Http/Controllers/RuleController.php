@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Animal;
+use App\Models\AnimalDisease;
+use App\Models\AnimalSymptom;
 use App\Models\Rule;
 use App\Models\Disease;
 use App\Models\Symptom;
@@ -12,17 +15,26 @@ class RuleController extends Controller
     /**
      * Menampilkan daftar rule dengan paginasi.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil data rule terbaru dengan paginasi 5 per halaman
-        $rules = Rule::latest()->paginate(5);
-
-        // Menambahkan properti encrypted_id pada setiap rule
-        foreach ($rules as $rule) {
-            $rule->encrypted_id = encrypt($rule->id);
+        $animalId = $request->query('animal_id');
+        $animals = Animal::all();
+    
+        $query = Rule::with(['disease', 'symptom']);
+    
+        if ($animalId) {
+            $diseaseIds = AnimalDisease::where('animal_id', $animalId)->pluck('disease_id');
+            $symptomIds = AnimalSymptom::where('animal_id', $animalId)->pluck('symptom_id');
+    
+            $query->where(function ($q) use ($diseaseIds, $symptomIds) {
+                $q->whereIn('disease_id', $diseaseIds)
+                  ->orWhereIn('symptom_id', $symptomIds);
+            });
         }
-
-        return view('rules.index', compact('rules'));
+    
+        $rules = $query->paginate(10);
+    
+        return view('rules.index', compact('rules', 'animals', 'animalId'));
     }
 
     /**
@@ -69,8 +81,8 @@ class RuleController extends Controller
      */
     public function edit(string $encryptedId)
     {
-        $id = decrypt($encryptedId);
-        $rule = Rule::findOrFail($id);
+        // $id = decrypt($encryptedId);
+        $rule = Rule::findOrFail($encryptedId);
         $diseases = Disease::all();
         $symptoms = Symptom::all();
 

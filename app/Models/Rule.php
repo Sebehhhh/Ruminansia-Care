@@ -12,10 +12,6 @@ class Rule extends Model
         'mb',
         'md'
     ];
-    public function animal()
-    {
-        return $this->belongsTo(Animal::class);
-    }
 
     public function disease()
     {
