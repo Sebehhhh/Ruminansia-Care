@@ -13,20 +13,21 @@ class HistoryController extends Controller
      */
     public function index()
     {
-        // Ambil riwayat terbaru
+        // Ambil riwayat terbaru (dengan relasi animal dan disease)
         $latestHistory = History::where('user_id', Auth::id())
-            ->with('disease')
+            ->with(['disease', 'animal'])
             ->latest()
             ->first();
 
-        // Ambil daftar riwayat dengan paginasi
+        // Ambil daftar riwayat dengan paginasi (dengan relasi animal dan disease)
         $histories = History::where('user_id', Auth::id())
-            ->with('disease')
+            ->with(['disease', 'animal'])
             ->latest()
             ->paginate(10);
 
         return view('history.index', compact('latestHistory', 'histories'));
     }
+
 
     /**
      * Menampilkan detail riwayat diagnosa tertentu.

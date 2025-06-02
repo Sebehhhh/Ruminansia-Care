@@ -13,6 +13,7 @@ class History extends Model
 
     protected $fillable = [
         'user_id',
+        'animal_id', // Tambahkan ini
         'disease_id',
         'confidence',
         'selected_symptoms',
@@ -26,6 +27,11 @@ class History extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function animal()
+    {
+        return $this->belongsTo(Animal::class);
     }
 
     public function disease()

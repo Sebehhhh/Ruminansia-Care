@@ -18,4 +18,9 @@ class Animal extends Model
     {
         return $this->belongsToMany(Disease::class, 'animal_disease');
     }
+
+    public function histories()
+    {
+        return $this->hasMany(History::class);
+    }
 }

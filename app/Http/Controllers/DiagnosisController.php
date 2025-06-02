@@ -98,11 +98,12 @@ class DiagnosisController extends Controller
         // Simpan ke history (opsional)
         if ($top) {
             History::create([
-                'user_id' => auth()->id(),
-                'disease_id' => $top['disease']->id,
-                'category' => $top['disease']->name,
-                'confidence' => $top['confidence'],
-                'selected_symptoms' => json_encode($inputSymptoms),
+                'user_id'           => auth()->id(),
+                'animal_id'         => $animalId, // <--- tambah ini!
+                'disease_id'        => $top['disease']->id,
+                'category'          => $top['disease']->name,
+                'confidence'        => $top['confidence'],
+                'selected_symptoms' => $inputSymptoms, // ga perlu json_encode, sudah pakai casts
             ]);
         }
 
