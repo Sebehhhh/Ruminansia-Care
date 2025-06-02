@@ -115,8 +115,8 @@ class RuleController extends Controller
      */
     public function destroy(string $encryptedId)
     {
-        $id = decrypt($encryptedId);
-        $rule = Rule::findOrFail($id);
+        // $id = decrypt($encryptedId);
+        $rule = Rule::findOrFail($encryptedId);
         $rule->delete();
 
         return redirect()->route('rules.index')
