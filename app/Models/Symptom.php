@@ -9,9 +9,18 @@ class Symptom extends Model
 {
     use HasFactory;
 
-    // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
         'code',
         'name',
     ];
+
+    public function animals()
+    {
+        return $this->belongsToMany(Animal::class, 'animal_symptom');
+    }
+
+    public function diseases()
+    {
+        return $this->belongsToMany(Disease::class, 'rules');
+    }
 }

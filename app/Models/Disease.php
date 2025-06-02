@@ -15,7 +15,14 @@ class Disease extends Model
         'recommendation',
     ];
 
-    /**
-     * Jika ada relasi dengan model lain, bisa ditambahkan di sini.
-     */
+    public function animals()
+    {
+        return $this->belongsToMany(Animal::class, 'animal_disease');
+    }
+
+    public function symptoms()
+    {
+        return $this->belongsToMany(Symptom::class, 'rules');
+    }
 }
+

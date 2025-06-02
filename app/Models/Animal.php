@@ -9,4 +9,13 @@ class Animal extends Model
 {
     protected $fillable = ['name'];
 
+    public function symptoms()
+    {
+        return $this->belongsToMany(Symptom::class, 'animal_symptom');
+    }
+
+    public function diseases()
+    {
+        return $this->belongsToMany(Disease::class, 'animal_disease');
+    }
 }

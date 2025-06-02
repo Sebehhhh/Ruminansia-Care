@@ -37,6 +37,8 @@ Route::middleware(['auth', 'isadmin'])->group(function () {
 });
 Route::middleware('auth')->group(function () {
     Route::resource('history', HistoryController::class);
+    Route::get('/diagnosis/result', [DiagnosisController::class, 'result'])->name('diagnosis.result');
     Route::get('/diagnosis', [DiagnosisController::class, 'index'])->name('diagnosis');
+    Route::get('/diagnosis/symptoms', [DiagnosisController::class, 'getSymptoms'])->name('diagnosis.symptoms');
     Route::post('/diagnosis/process', [DiagnosisController::class, 'process'])->name('diagnosis.process');
 });
