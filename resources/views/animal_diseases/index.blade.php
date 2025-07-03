@@ -66,7 +66,9 @@
                     <tr>
                         <td>{{ $animalDiseases->firstItem() + $index }}</td>
                         <td>{{ $animalDisease->animal->name }}</td>
-                        <td>{{ $animalDisease->disease->name }}</td>
+                        <td>
+                            {{ $animalDisease->disease->code ? $animalDisease->disease->code . ' - ' : '' }}{{ $animalDisease->disease->name }}
+                        </td>
                         {{-- <td>{{ $animalDisease->notes }}</td> --}}
                         <td>
                             <button class="btn btn-danger btn-sm delete-btn" data-id="{{ $animalDisease->id }}">

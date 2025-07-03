@@ -52,8 +52,8 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Penyakit</th>
                         <th>Gejala</th>
+                        <th>Penyakit</th>
                         <th>MB</th>
                         <th>MD</th>
                         <th>Aksi</th>
@@ -63,8 +63,8 @@
                     @foreach ($rules as $index => $rule)
                         <tr>
                             <td>{{ $rules->firstItem() + $index }}</td>
-                            <td>{{ $rule->disease->name ?? 'N/A' }}</td>
-                            <td>{{ $rule->symptom->name ?? 'N/A' }}</td>
+                            <td>{{ $rule->symptom->code ?? 'N/A' }}</td>
+                            <td>{{ $rule->disease->code ?? 'N/A' }}</td>
                             <td>{{ $rule->mb }}</td>
                             <td>{{ $rule->md }}</td>
                             <td>

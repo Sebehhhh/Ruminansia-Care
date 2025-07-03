@@ -76,7 +76,9 @@
                     <tr>
                         <td>{{ $animalSymptoms->firstItem() + $index }}</td>
                         <td>{{ $animalSymptom->animal->name }}</td>
-                        <td>{{ $animalSymptom->symptom->name }}</td>
+                        <td>
+                            {{ $animalSymptom->symptom->code ? $animalSymptom->symptom->code . ' - ' : '' }}{{ $animalSymptom->symptom->name }}
+                        </td>
                         <td>
                             <form id="delete-form-{{ $animalSymptom->id }}"
                                 action="{{ route('animal_symptoms.destroy', $animalSymptom->id) }}" method="POST"

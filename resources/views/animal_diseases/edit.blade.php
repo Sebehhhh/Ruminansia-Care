@@ -22,7 +22,7 @@
                                            id="disease_{{ $disease->id }}"
                                            {{ in_array($disease->id, $selectedDiseases) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="disease_{{ $disease->id }}">
-                                        {{ $disease->name }}
+                                        {{ $disease->code ? $disease->code . ' - ' : '' }}{{ $disease->name }}
                                     </label>
                                 </div>
                             @endforeach

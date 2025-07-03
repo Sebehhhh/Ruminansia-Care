@@ -46,7 +46,7 @@
                                 (is_array(old('disease_ids')) && in_array($disease->id, old('disease_ids'))) ? 'checked'
                             : '' }}>
                             <label class="form-check-label" for="disease_{{ $disease->id }}">
-                                {{ $disease->name }}
+                                {{ $disease->code ? $disease->code . ' - ' : '' }}{{ $disease->name }}
                             </label>
                         </div>
                         @endforeach
