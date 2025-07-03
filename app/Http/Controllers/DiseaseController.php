@@ -38,6 +38,7 @@ class DiseaseController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'code'           => 'nullable|string|max:255|unique:diseases,code',
             'name'           => 'required|string|max:255|unique:diseases,name',
             'description'    => 'required|string',
             'recommendation' => 'required|string',
@@ -78,6 +79,7 @@ class DiseaseController extends Controller
         $disease = Disease::findOrFail($encryptedId);
 
         $validated = $request->validate([
+            'code'           => 'nullable|string|max:255|unique:diseases,code,' . $disease->id,
             'name'           => 'required|string|max:255|unique:diseases,name,' . $disease->id,
             'description'    => 'required|string',
             'recommendation' => 'required|string',

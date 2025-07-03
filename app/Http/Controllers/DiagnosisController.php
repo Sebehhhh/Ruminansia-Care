@@ -83,7 +83,7 @@ class DiagnosisController extends Controller
                     $cfCombine = $cf;
                 } else {
                     $cfCombine = $cfCombine + $cf * (1 - $cfCombine);
-                }
+                }  
             }
             $results[] = [
                 'disease' => $disease,

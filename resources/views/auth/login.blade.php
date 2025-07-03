@@ -27,31 +27,48 @@
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet">
+    <style>
+        body.bg-dark {
+            background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed;
+            background-size: cover;
+            /* Optional: Tambah overlay gelap biar form tetap jelas */
+            position: relative;
+        }
+        .bg-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10, 10, 10, 0.7);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .login-content {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
 </head>
 
 <body class="bg-dark">
     <div class="sufee-login d-flex align-content-center flex-wrap">
         <div class="container">
             <div class="login-content">
-                <div class="login-logo">
-                    <a href="{{ url('/') }}">
-                        <img class="align-content" src="{{ asset('images/logo.png') }}" alt="Logo">
-                    </a>
+                <div class="login-logo text-center mb-4">
+                    <h2 class="text-white">Login</h2>
                 </div>
                 <div class="login-form">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         @if (session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
                         @endif
                         <div class="form-group">
                             <label for="email">Email Address</label>
                             <input type="email" name="email" id="email" class="form-control" placeholder="Email"
                                 value="{{ old('email') }}" required autofocus>
                             @error('email')
-                                <span class="text-danger small">{{ $message }}</span>
+                            <span class="text-danger small">{{ $message }}</span>
                             @enderror
                         </div>
 
@@ -60,7 +77,7 @@
                             <input type="password" name="password" id="password" class="form-control"
                                 placeholder="Password" required>
                             @error('password')
-                                <span class="text-danger small">{{ $message }}</span>
+                            <span class="text-danger small">{{ $message }}</span>
                             @enderror
                         </div>
 

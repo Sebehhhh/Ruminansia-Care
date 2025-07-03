@@ -11,6 +11,15 @@
                     @method('PUT')
 
                     <div class="mb-3">
+                        <label for="code" class="form-label">Kode Penyakit</label>
+                        <input type="text" class="form-control @error('code') is-invalid @enderror" id="code"
+                            name="code" value="{{ old('code', $disease->code) }}">
+                        @error('code')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
                         <label for="name" class="form-label">Nama Penyakit</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
                             name="name" value="{{ old('name', $disease->name) }}" required>

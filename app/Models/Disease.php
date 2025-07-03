@@ -13,6 +13,7 @@ class Disease extends Model
         'name',
         'description',
         'recommendation',
+        'code'
     ];
 
     public function animals()
