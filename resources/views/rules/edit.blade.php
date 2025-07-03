@@ -15,7 +15,7 @@
                             @foreach ($diseases as $disease)
                                 <option value="{{ $disease->id }}"
                                     {{ $rule->disease_id == $disease->id ? 'selected' : '' }}>
-                                    {{ $disease->name }}</option>
+                                    {{ $disease->code ? $disease->code . ' - ' : '' }}{{ $disease->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -26,7 +26,7 @@
                             @foreach ($symptoms as $symptom)
                                 <option value="{{ $symptom->id }}"
                                     {{ $rule->symptom_id == $symptom->id ? 'selected' : '' }}>
-                                    {{ $symptom->name }}</option>
+                                    {{ $symptom->code ? $symptom->code . ' - ' : '' }}{{ $symptom->name }}</option>
                             @endforeach
                         </select>
                     </div>

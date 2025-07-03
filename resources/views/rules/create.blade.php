@@ -13,7 +13,7 @@
                         <select name="disease_id" class="form-control" required>
                             <option value="">-- Pilih Penyakit --</option>
                             @foreach ($diseases as $disease)
-                                <option value="{{ $disease->id }}">{{ $disease->name }}</option>
+                                <option value="{{ $disease->id }}">{{ $disease->code ? $disease->code . ' - ' : '' }}{{ $disease->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -22,7 +22,7 @@
                         <select name="symptom_id" class="form-control" required>
                             <option value="">-- Pilih Gejala --</option>
                             @foreach ($symptoms as $symptom)
-                                <option value="{{ $symptom->id }}">{{ $symptom->name }}</option>
+                                <option value="{{ $symptom->id }}">{{ $symptom->code ? $symptom->code . ' - ' : '' }}{{ $symptom->name }}</option>
                             @endforeach
                         </select>
                     </div>
