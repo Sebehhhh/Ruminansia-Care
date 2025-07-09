@@ -4,14 +4,9 @@
 
 @section('content')
 <div class="container">
-    <h3>Daftar Aturan</h3>
+    <h3 class="mb-4">Daftar Aturan (Rule)</h3>
 
-    <!-- Tombol tambah rule -->
-    <a href="{{ route('rules.create') }}" class="btn btn-primary mb-3 mt-3 btn-icon" title="Tambah Rule">
-        <i class="fa fa-plus"></i>
-    </a>
-
-    <!-- Notifikasi SweetAlert -->
+    {{-- Notifikasi sukses --}}
     @if (session('success'))
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -26,79 +21,78 @@
     </script>
     @endif
 
+    {{-- Area tombol dan filter --}}
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+        <a href="{{ route('rules.create') }}" class="btn btn-primary btn-sm">
+            <i class="fa fa-plus me-1"></i> Tambah Rule
+        </a>
+
+        <form method="GET" action="{{ route('rules.index') }}" class="d-flex gap-2">
+            <select name="animal_id" id="animal_id" class="form-select form-select-sm" style="min-width: 180px;"
+                onchange="this.form.submit()">
+                <option value="">-- Semua Hewan --</option>
+                @foreach ($animals as $animal)
+                <option value="{{ $animal->id }}" {{ request('animal_id')==$animal->id ? 'selected' : '' }}>
+                    {{ $animal->name }}
+                </option>
+                @endforeach
+            </select>
+        </form>
+    </div>
+
+    {{-- Tabel data --}}
     <div class="card">
-        <div class="card-body">
-
-            <!-- Dropdown filter hewan -->
-            <div class="mb-3">
-                <form method="GET" action="{{ route('rules.index') }}">
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <select name="animal_id" id="animal_id" class="form-select" onchange="this.form.submit()">
-                                <option value="">-- Semua Hewan --</option>
-                                @foreach ($animals as $animal)
-                                    <option value="{{ $animal->id }}" {{ (request('animal_id') == $animal->id) ? 'selected' : '' }}>
-                                        {{ $animal->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Tabel rule -->
-            <table class="table table-bordered">
-                <thead>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="text-center">
                     <tr>
                         <th>No</th>
-                        <th>Gejala</th>
-                        <th>Penyakit</th>
+                        <th>Kode Gejala</th>
+                        <th>Kode Penyakit</th>
                         <th>MB</th>
                         <th>MD</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($rules as $index => $rule)
-                        <tr>
-                            <td>{{ $rules->firstItem() + $index }}</td>
-                            <td>{{ $rule->symptom->code ?? 'N/A' }}</td>
-                            <td>{{ $rule->disease->code ?? 'N/A' }}</td>
-                            <td>{{ $rule->mb }}</td>
-                            <td>{{ $rule->md }}</td>
-                            <td>
-                                <!-- Tombol edit -->
-                                <a href="{{ route('rules.edit', $rule->id) }}" class="btn btn-sm btn-warning btn-icon" title="Edit">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-
-                                <!-- Tombol hapus -->
-                                <button class="btn btn-sm btn-danger btn-icon delete-btn" title="Hapus" data-id="{{ $rule->id }}">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-
-                                <!-- Form delete tersembunyi -->
-                                <form id="delete-form-{{ $rule->id }}" action="{{ route('rules.destroy', $rule->id) }}"
-                                      method="POST" class="d-none">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
+                    @forelse ($rules as $index => $rule)
+                    <tr>
+                        <td class="text-center">{{ $rules->firstItem() + $index }}</td>
+                        <td>{{ $rule->symptom->code ?? '-' }}</td>
+                        <td>{{ $rule->disease->code ?? '-' }}</td>
+                        <td class="text-center">{{ $rule->mb }}</td>
+                        <td class="text-center">{{ $rule->md }}</td>
+                        <td class="text-center">
+                            <a href="{{ route('rules.edit', $rule->id) }}" class="btn btn-warning btn-sm me-1"
+                                title="Edit">
+                                <i class="fa fa-pencil-alt"></i>
+                            </a>
+                            <button class="btn btn-danger btn-sm delete-btn" title="Hapus" data-id="{{ $rule->id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                            <form id="delete-form-{{ $rule->id }}" method="POST"
+                                action="{{ route('rules.destroy', $rule->id) }}" class="d-none">
+                                @csrf @method('DELETE')
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Belum ada data aturan.</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
 
-            <!-- Paginasi -->
+            {{-- Paginasi --}}
             <div class="mt-3">
-                {{ $rules->links('pagination::bootstrap-4') }}
+                {{ $rules->withQueryString()->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>
 </div>
 
-<!-- SweetAlert untuk hapus -->
+{{-- SweetAlert Hapus --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {

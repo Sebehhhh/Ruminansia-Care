@@ -13,11 +13,19 @@ class AnimalDiseaseController extends Controller
     /**
      * Display a listing of the animal diseases.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $animalDiseases = AnimalDisease::with(['animal', 'disease'])->latest()->paginate(5);
-        $animals = Animal::all();
-        return view('animal_diseases.index', compact('animalDiseases','animals'));
+        $animals = Animal::all(); // untuk dropdown filter & edit
+
+        $query = AnimalDisease::with(['animal', 'disease'])->latest();
+
+        if ($request->filled('animal_id')) {
+            $query->where('animal_id', $request->animal_id);
+        }
+
+        $animalDiseases = $query->paginate(5)->withQueryString(); // withQueryString agar filter tetap saat pagination
+
+        return view('animal_diseases.index', compact('animalDiseases', 'animals'));
     }
 
     /**
@@ -39,9 +47,9 @@ class AnimalDiseaseController extends Controller
         $validated = $request->validate([
             'animal_id'    => 'required|exists:animals,id',
             'disease_ids'  => 'required|array|min:1',
-            'disease_ids.*'=> 'exists:diseases,id',
+            'disease_ids.*' => 'exists:diseases,id',
         ]);
-    
+
         try {
             foreach ($validated['disease_ids'] as $diseaseId) {
                 AnimalDisease::create([
@@ -49,17 +57,16 @@ class AnimalDiseaseController extends Controller
                     'disease_id' => $diseaseId,
                 ]);
             }
-    
+
             return redirect()->route('animal_diseases.index')
                 ->with('success', 'Data penyakit hewan berhasil ditambahkan.');
-    
         } catch (QueryException $e) {
             if ($e->getCode() == 23000) {
                 return redirect()->back()
                     ->withInput()
                     ->with('error', 'Data penyakit hewan tersebut sudah pernah ditambahkan.');
             }
-    
+
             throw $e; // lempar ulang jika bukan error duplikat
         }
     }

@@ -10,10 +10,18 @@ use Illuminate\Database\QueryException;
 
 class AnimalSymptomController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $animalSymptoms = AnimalSymptom::with(['animal', 'symptom'])->latest()->paginate(5);
         $animals = Animal::all();
+
+        $query = AnimalSymptom::with(['animal', 'symptom'])->latest();
+
+        if ($request->filled('animal_id')) {
+            $query->where('animal_id', $request->animal_id);
+        }
+
+        $animalSymptoms = $query->paginate(5)->withQueryString();
+
         return view('animal_symptoms.index', compact('animalSymptoms', 'animals'));
     }
 
@@ -29,7 +37,7 @@ class AnimalSymptomController extends Controller
         $validated = $request->validate([
             'animal_id'    => 'required|exists:animals,id',
             'symptom_ids'  => 'required|array|min:1',
-            'symptom_ids.*'=> 'exists:symptoms,id',
+            'symptom_ids.*' => 'exists:symptoms,id',
         ]);
 
         try {

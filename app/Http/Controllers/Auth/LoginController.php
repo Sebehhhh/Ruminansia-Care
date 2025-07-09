@@ -26,7 +26,7 @@ class LoginController extends Controller
         // Jika autentikasi berhasil
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('');
+            return redirect()->intended('/dashboard');
         }
         
         // Jika gagal, kembali ke form login dengan pesan error
