@@ -21,22 +21,52 @@
     </script>
     @endif
 
-    {{-- Area tombol dan filter --}}
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
-        <a href="{{ route('rules.create') }}" class="btn btn-primary btn-sm">
-            <i class="fa fa-plus me-1"></i> Tambah Rule
-        </a>
-
-        <form method="GET" action="{{ route('rules.index') }}" class="d-flex gap-2">
-            <select name="animal_id" id="animal_id" class="form-select form-select-sm" style="min-width: 180px;"
-                onchange="this.form.submit()">
-                <option value="">-- Semua Hewan --</option>
-                @foreach ($animals as $animal)
-                <option value="{{ $animal->id }}" {{ request('animal_id')==$animal->id ? 'selected' : '' }}>
-                    {{ $animal->name }}
-                </option>
-                @endforeach
-            </select>
+    {{-- Area tombol dan filter dalam 12 kolom, dibagi 3-3-3-3 --}}
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-2 col-sm-6 mb-2 mb-md-0">
+            <a href="{{ route('rules.create') }}" class="btn btn-primary btn-sm w-100">
+                <i class="fa fa-plus me-1"></i> Tambah Rule
+            </a>
+        </div>
+        <form method="GET" action="{{ route('rules.index') }}" class="col-md-10 row g-2">
+            <div class="col-md-3 col-sm-6">
+                <select name="animal_id" id="animal_id" class="form-select form-select-sm"
+                    onchange="this.form.submit()">
+                    <option value="">-- Semua Hewan --</option>
+                    @foreach ($animals as $animal)
+                    <option value="{{ $animal->id }}" {{ request('animal_id')==$animal->id ? 'selected' : '' }}>
+                        {{ $animal->name }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6 mx-2">
+                <select name="disease_id" id="disease_id" class="form-select form-select-sm"
+                    onchange="this.form.submit()">
+                    <option value="">-- Semua Penyakit --</option>
+                    @foreach ($diseases as $disease)
+                    <option value="{{ $disease->id }}" {{ request('disease_id')==$disease->id ? 'selected' : '' }}>
+                        {{ $disease->code }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <select name="symptom_id" id="symptom_id" class="form-select form-select-sm"
+                    onchange="this.form.submit()">
+                    <option value="">-- Semua Gejala --</option>
+                    @foreach ($symptoms as $symptom)
+                    <option value="{{ $symptom->id }}" {{ request('symptom_id')==$symptom->id ? 'selected' : '' }}>
+                        {{ $symptom->code }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-6 d-flex align-items-end">
+                <button type="submit" class="btn btn-secondary btn-sm w-100">
+                    <i class="fa fa-filter me-1"></i> Filter
+                </button>
+            </div>
         </form>
     </div>
 
@@ -65,7 +95,7 @@
                         <td class="text-center">
                             <a href="{{ route('rules.edit', $rule->id) }}" class="btn btn-warning btn-sm me-1"
                                 title="Edit">
-                                <i class="fa fa-pencil-alt"></i>
+                                <i class="fa fa-edit"></i>
                             </a>
                             <button class="btn btn-danger btn-sm delete-btn" title="Hapus" data-id="{{ $rule->id }}">
                                 <i class="fa fa-trash"></i>

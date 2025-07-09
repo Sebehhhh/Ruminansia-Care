@@ -17,27 +17,39 @@ class RuleController extends Controller
      * Menampilkan daftar rule dengan filter berdasarkan hewan.
      */
     public function index(Request $request)
-    {
-        $animalId = $request->query('animal_id');
-        $animals = Animal::all();
+{
+    $animalId = $request->query('animal_id');
+    $diseaseId = $request->query('disease_id');
+    $symptomId = $request->query('symptom_id');
 
-        $query = Rule::with(['disease', 'symptom'])
-            ->join('diseases', 'rules.disease_id', '=', 'diseases.id');
+    $animals = Animal::all();
+    $diseases = Disease::orderBy('code')->get();
+    $symptoms = Symptom::orderBy('code')->get();
 
-        if ($animalId) {
-            $diseaseIds = AnimalDisease::where('animal_id', $animalId)->pluck('disease_id');
-            $symptomIds = AnimalSymptom::where('animal_id', $animalId)->pluck('symptom_id');
+    $query = Rule::with(['disease', 'symptom'])
+        ->join('diseases', 'rules.disease_id', '=', 'diseases.id');
 
-            $query->whereIn('rules.disease_id', $diseaseIds)
-                ->whereIn('rules.symptom_id', $symptomIds);
-        }
-
-        $query->orderByRaw("CAST(SUBSTRING(diseases.code, 2) AS UNSIGNED)");
-
-        $rules = $query->select('rules.*')->paginate(10)->withQueryString();
-
-        return view('rules.index', compact('rules', 'animals', 'animalId'));
+    if ($animalId) {
+        $diseaseIds = AnimalDisease::where('animal_id', $animalId)->pluck('disease_id');
+        $symptomIds = AnimalSymptom::where('animal_id', $animalId)->pluck('symptom_id');
+        $query->whereIn('rules.disease_id', $diseaseIds)
+              ->whereIn('rules.symptom_id', $symptomIds);
     }
+
+    if ($diseaseId) {
+        $query->where('rules.disease_id', $diseaseId);
+    }
+
+    if ($symptomId) {
+        $query->where('rules.symptom_id', $symptomId);
+    }
+
+    $query->orderByRaw("CAST(SUBSTRING(diseases.code, 2) AS UNSIGNED)");
+
+    $rules = $query->select('rules.*')->paginate(10)->withQueryString();
+
+    return view('rules.index', compact('rules', 'animals', 'animalId', 'diseases', 'symptoms', 'diseaseId', 'symptomId'));
+}
 
     /**
      * Menampilkan form untuk membuat rule baru.

@@ -13,15 +13,21 @@ class AnimalSymptomController extends Controller
     public function index(Request $request)
     {
         $animals = Animal::all();
-
-        $query = AnimalSymptom::with(['animal', 'symptom'])->latest();
-
+    
+        // Pastikan join, select, dan where pakai nama tabel: animal_symptom (singular)
+        $query = AnimalSymptom::with(['animal', 'symptom'])
+            ->join('animals', 'animal_symptom.animal_id', '=', 'animals.id')
+            ->join('symptoms', 'animal_symptom.symptom_id', '=', 'symptoms.id')
+            ->orderBy('animals.name') // Atau 'animals.code' jika ingin urut kode hewan
+            ->orderByRaw('CAST(SUBSTRING(symptoms.code, 2) AS UNSIGNED)');
+    
         if ($request->filled('animal_id')) {
-            $query->where('animal_id', $request->animal_id);
+            $query->where('animal_symptom.animal_id', $request->animal_id);
         }
-
-        $animalSymptoms = $query->paginate(5)->withQueryString();
-
+    
+        // select kolom utama dari tabel animal_symptom
+        $animalSymptoms = $query->select('animal_symptom.*')->paginate(5)->withQueryString();
+    
         return view('animal_symptoms.index', compact('animalSymptoms', 'animals'));
     }
 
