@@ -47,8 +47,8 @@
                 <thead class="text-center">
                     <tr>
                         <th>No</th>
-                        <th>Kode Gejala</th>
                         <th>Kode Penyakit</th>
+                        <th>Kode Gejala</th>
                         <th>MB</th>
                         <th>MD</th>
                         <th>Aksi</th>
@@ -58,8 +58,8 @@
                     @forelse ($rules as $index => $rule)
                     <tr>
                         <td class="text-center">{{ $rules->firstItem() + $index }}</td>
-                        <td>{{ $rule->symptom->code ?? '-' }}</td>
                         <td>{{ $rule->disease->code ?? '-' }}</td>
+                        <td>{{ $rule->symptom->code ?? '-' }}</td>
                         <td class="text-center">{{ $rule->mb }}</td>
                         <td class="text-center">{{ $rule->md }}</td>
                         <td class="text-center">

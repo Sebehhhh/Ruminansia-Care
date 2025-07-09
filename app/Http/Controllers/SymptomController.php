@@ -13,14 +13,14 @@ class SymptomController extends Controller
      */
     public function index()
     {
-        // Mengambil data gejala terbaru dengan paginasi 5 per halaman
-        $symptoms = Symptom::latest()->paginate(5);
-
-        // Menambahkan properti encrypted_id pada setiap symptom
+        $symptoms = Symptom::select('*')
+            ->orderByRaw("CAST(SUBSTRING(code, 2) AS UNSIGNED)") // Sort numerik berdasarkan angka setelah 'G'
+            ->paginate(5);
+    
         foreach ($symptoms as $symptom) {
             $symptom->encrypted_id = encrypt($symptom->id);
         }
-
+    
         return view('symptoms.index', compact('symptoms'));
     }
 

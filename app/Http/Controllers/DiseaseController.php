@@ -13,14 +13,14 @@ class DiseaseController extends Controller
      */
     public function index()
     {
-        // Mengambil data penyakit terbaru dengan paginasi 5 per halaman
-        $diseases = Disease::latest()->paginate(5);
-
-        // Menambahkan properti encrypted_id pada setiap disease
+        $diseases = Disease::select('*')
+            ->orderByRaw("CAST(SUBSTRING(code, 2) AS UNSIGNED)") // Ambil angka setelah 'P' dan urutkan numerik
+            ->paginate(5);
+    
         foreach ($diseases as $disease) {
             $disease->encrypted_id = encrypt($disease->id);
         }
-
+    
         return view('diseases.index', compact('diseases'));
     }
 

@@ -21,17 +21,20 @@ class RuleController extends Controller
         $animalId = $request->query('animal_id');
         $animals = Animal::all();
 
-        $query = Rule::with(['disease', 'symptom']);
+        $query = Rule::with(['disease', 'symptom'])
+            ->join('diseases', 'rules.disease_id', '=', 'diseases.id');
 
         if ($animalId) {
             $diseaseIds = AnimalDisease::where('animal_id', $animalId)->pluck('disease_id');
             $symptomIds = AnimalSymptom::where('animal_id', $animalId)->pluck('symptom_id');
 
-            $query->whereIn('disease_id', $diseaseIds)
-                ->whereIn('symptom_id', $symptomIds);
+            $query->whereIn('rules.disease_id', $diseaseIds)
+                ->whereIn('rules.symptom_id', $symptomIds);
         }
 
-        $rules = $query->paginate(10);
+        $query->orderByRaw("CAST(SUBSTRING(diseases.code, 2) AS UNSIGNED)");
+
+        $rules = $query->select('rules.*')->paginate(10)->withQueryString();
 
         return view('rules.index', compact('rules', 'animals', 'animalId'));
     }
