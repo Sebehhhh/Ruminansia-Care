@@ -66,7 +66,7 @@
 <section class="section bg-light" id="statistik">
     <div class="container">
         <div class="text-center mb-5">
-            <h2>Statistik Sistem</h2>
+            <h2>Informasi Sistem</h2>
             <p>Data terkini dalam sistem pakar</p>
         </div>
         <div class="row text-center">

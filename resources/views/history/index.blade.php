@@ -36,10 +36,14 @@
             <ul class="ml-3">
                 @php
                     $selectedSymptoms = $latestHistory->selected_symptoms ?? [];
-                    $symptomNames = \App\Models\Symptom::whereIn('id', array_keys($selectedSymptoms))->pluck('name')->toArray();
+                    $symptoms = \App\Models\Symptom::whereIn('id', array_keys($selectedSymptoms))->get();
                 @endphp
-                @foreach ($symptomNames as $name)
-                    <li>{{ $name }}</li>
+                @foreach ($symptoms as $symptom)
+                    <li>
+                        <strong>Kode:</strong> {{ $symptom->code ?? '-' }}<br>
+                        <strong>Nama:</strong> {{ $symptom->name ?? '-' }}<br>
+                        <strong>CF User:</strong> {{ $selectedSymptoms[$symptom->id] ?? '-' }}
+                    </li>
                 @endforeach
             </ul>
         </div>
@@ -69,10 +73,14 @@
                     <ul class="ml-3">
                         @php
                             $selectedSymptoms = $history->selected_symptoms ?? [];
-                            $symptomNames = \App\Models\Symptom::whereIn('id', array_keys($selectedSymptoms))->pluck('name')->toArray();
+                            $symptoms = \App\Models\Symptom::whereIn('id', array_keys($selectedSymptoms))->get();
                         @endphp
-                        @foreach ($symptomNames as $name)
-                            <li>{{ $name }}</li>
+                        @foreach ($symptoms as $symptom)
+                            <li>
+                                <strong>Kode:</strong> {{ $symptom->code ?? '-' }}<br>
+                                <strong>Nama:</strong> {{ $symptom->name ?? '-' }}<br>
+                                <strong>CF User:</strong> {{ $selectedSymptoms[$symptom->id] ?? '-' }}
+                            </li>
                         @endforeach
                     </ul>
                     <!-- Tombol hapus di dalam accordion -->

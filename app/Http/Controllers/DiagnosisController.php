@@ -9,6 +9,7 @@ use App\Models\History;
 use App\Models\Rule;
 use App\Models\Symptom;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DiagnosisController extends Controller
 {
@@ -56,6 +57,14 @@ class DiagnosisController extends Controller
         $animalId = $request->input('animal_id');
         $inputSymptoms = $request->input('symptoms');
 
+        // Filter gejala: hanya yang > 0 (tidak 0 dan tidak null)
+        $filteredSymptoms = [];
+        foreach ($inputSymptoms as $symptomId => $value) {
+            if ($value !== null && floatval($value) > 0) {
+                $filteredSymptoms[$symptomId] = $value;
+            }
+        }
+
         // Ambil semua penyakit yang mungkin pada hewan ini
         $diseaseIds = \App\Models\AnimalDisease::where('animal_id', $animalId)
             ->pluck('disease_id')->toArray();
@@ -63,14 +72,14 @@ class DiagnosisController extends Controller
 
         $results = [];
         foreach ($diseases as $disease) {
-            // Ambil rules yang berhubungan dengan penyakit ini
+            // Ambil rules yang berhubungan dengan penyakit ini dan hanya untuk gejala yang dipilih (filtered)
             $rules = Rule::where('disease_id', $disease->id)
-                ->whereIn('symptom_id', array_keys($inputSymptoms))
+                ->whereIn('symptom_id', array_keys($filteredSymptoms))
                 ->get();
 
             $CFs = [];
             foreach ($rules as $rule) {
-                $userCF = floatval($inputSymptoms[$rule->symptom_id]);
+                $userCF = floatval($filteredSymptoms[$rule->symptom_id]);
                 // Rumus: CF = (MB - MD) * userCF
                 $cf = ($rule->mb - $rule->md) * $userCF;
                 $CFs[] = $cf;
@@ -98,12 +107,12 @@ class DiagnosisController extends Controller
         // Simpan ke history (opsional)
         if ($top) {
             History::create([
-                'user_id'           => auth()->id(),
-                'animal_id'         => $animalId, // <--- tambah ini!
+                'user_id'           => Auth::id(),
+                'animal_id'         => $animalId,
                 'disease_id'        => $top['disease']->id,
                 'category'          => $top['disease']->name,
                 'confidence'        => $top['confidence'],
-                'selected_symptoms' => $inputSymptoms, // ga perlu json_encode, sudah pakai casts
+                'selected_symptoms' => $filteredSymptoms, // hanya gejala > 0 yang disimpan
             ]);
         }
 
@@ -111,7 +120,7 @@ class DiagnosisController extends Controller
         return view('diagnosis.result', [
             'results' => $results,
             'top' => $top,
-            'inputSymptoms' => $inputSymptoms,
+            'inputSymptoms' => $filteredSymptoms, // hanya gejala > 0 yang dikirim ke view
         ]);
     }
 

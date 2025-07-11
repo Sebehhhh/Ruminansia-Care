@@ -122,6 +122,12 @@
                                         <span class="badge bg-info text-dark ms-2">
                                             {{ $label }} ({{ $value }})
                                         </span>
+                                        @if($symptom)
+                                            <div class="small text-muted mt-1">
+                                                <b>Kode:</b> {{ $symptom->code ?? '-' }}<br>
+                                                <b>Deskripsi:</b> {{ $symptom->description ?? '-' }}
+                                            </div>
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>

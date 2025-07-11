@@ -56,6 +56,14 @@ class Home extends Controller
         $animalId = $request->input('animal_id');
         $inputSymptoms = $request->input('symptoms');
 
+        // Filter gejala: hanya yang > 0 (tidak 0 dan tidak null)
+        $filteredSymptoms = [];
+        foreach ($inputSymptoms as $symptomId => $value) {
+            if ($value !== null && floatval($value) > 0) {
+                $filteredSymptoms[$symptomId] = $value;
+            }
+        }
+
         // Ambil penyakit yang mungkin pada hewan ini
         $diseaseIds = \App\Models\AnimalDisease::where('animal_id', $animalId)
             ->pluck('disease_id')->toArray();
@@ -65,13 +73,13 @@ class Home extends Controller
 
         foreach ($diseases as $disease) {
             $rules = Rule::where('disease_id', $disease->id)
-                ->whereIn('symptom_id', array_keys($inputSymptoms))
+                ->whereIn('symptom_id', array_keys($filteredSymptoms))
                 ->get();
 
             $CFs = [];
 
             foreach ($rules as $rule) {
-                $userCF = floatval($inputSymptoms[$rule->symptom_id]);
+                $userCF = floatval($filteredSymptoms[$rule->symptom_id]);
                 $cf = ($rule->mb - $rule->md) * $userCF;
                 $CFs[] = $cf;
             }
@@ -95,7 +103,7 @@ class Home extends Controller
         return view('diagnosa.result', [
             'results' => $results,
             'top' => $top,
-            'inputSymptoms' => $inputSymptoms,
+            'inputSymptoms' => $filteredSymptoms, // hanya gejala > 0 yang dikirimkan
         ]);
     }
 }
