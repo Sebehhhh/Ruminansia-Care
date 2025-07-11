@@ -3,10 +3,10 @@
     <div class="container d-flex align-items-center justify-content-between">
 
         <!-- Start Logo -->
-        <a class="navbar-brand w-auto" href="{{ url('/') }}">
+        {{-- <a class="navbar-brand w-auto" href="{{ url('/') }}">
             <img class="logo img-fluid" src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo Sistem Pakar"
                 style="width: 60px; height: 60px;">
-        </a>
+        </a> --}}
         <!-- End Logo -->
 
         <!-- Start offcanvas menu -->

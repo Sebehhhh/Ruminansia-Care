@@ -123,10 +123,13 @@
             <p>Hubungi pengembang untuk kolaborasi atau pelaporan bug</p>
         </div>
         <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="mb-2"><i class="bi bi-geo-alt"></i> Banjarmasin, Kalimantan Selatan</div>
-                <div class="mb-2"><i class="bi bi-telephone"></i> 0812-xxxx-xxxx</div>
-                <div class="mb-2"><i class="bi bi-envelope"></i> support@sistempakar-ternak.id</div>
+            <div class="col-md-8">
+                <div class="text-center">
+                    <div class="mb-2"><i class="bi bi-geo-alt"></i> Gn. Makmur, Takisung, Kabupaten Tanah Laut, Kalimantan Selatan 70861</div>
+                    <div class="mb-2"><i class="bi bi-geo-alt"></i> Jl. Raya Takisung, Takisung, Kabupaten Tanah Laut, Kalimantan Selatan</div>
+                    <div class="mb-2"><i class="bi bi-telephone"></i> +62 852-4727-9944</div>
+                    <div class="mb-2"><i class="bi bi-envelope"></i> puskeswantakisung@gmail.co</div>
+                </div>
             </div>
         </div>
     </div>
