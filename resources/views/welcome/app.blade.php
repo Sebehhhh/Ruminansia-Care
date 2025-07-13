@@ -4,8 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title> Nova Free Bootstrap Template for Agency &mdash; by FreeBootstrap.net </title>
+    <title>Ruminansia Care - Sistem Pakar Diagnosa Penyakit Hewan Ternak</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('home/assets/images/tala.png') }}">
     <!-- ======= Google Font =======-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">

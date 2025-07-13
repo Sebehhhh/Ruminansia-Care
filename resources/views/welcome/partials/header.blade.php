@@ -4,7 +4,7 @@
 
         <!-- Start Logo -->
         {{-- <a class="navbar-brand w-auto" href="{{ url('/') }}">
-            <img class="logo img-fluid" src="{{ asset('assets/images/logos/logo.png') }}" alt="Logo Sistem Pakar"
+            <img class="logo img-fluid" src="{{ asset('home/assets/images/tala.png') }}" alt="Logo Sistem Pakar"
                 style="width: 60px; height: 60px;">
         </a> --}}
         <!-- End Logo -->
@@ -16,7 +16,7 @@
             <div class="offcanvas-header">
                 <div class="offcanvas-header-logo">
                     <a class="logo-link" id="fbs__net-navbarsLabel" href="{{ url('/') }}">
-                        <img class="logo img-fluid" src="{{ asset('assets/images/logos/logo.png') }}"
+                        <img class="logo img-fluid" src="{{ asset('home/assets/images/tala.png') }}"
                             alt="Logo Sistem Pakar">
                     </a>
                 </div>

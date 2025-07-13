@@ -29,15 +29,11 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet">
 </head>
 
-<body class="bg-dark">
+<body style="min-height:100vh; background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') no-repeat center center fixed; background-size: cover;">
     <div class="sufee-login d-flex align-content-center flex-wrap">
         <div class="container">
             <div class="login-content">
-                <div class="login-logo">
-                    <a href="{{ url('/') }}">
-                        <img class="align-content" src="{{ asset('images/logo.png') }}" alt="Logo">
-                    </a>
-                </div>
+                <!-- Logo dihapus sesuai permintaan -->
                 <div class="login-form">
                     <h2>Reset Password</h2>
                     <form method="POST" action="{{ route('password.update') }}">
