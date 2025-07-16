@@ -21,6 +21,34 @@
     </script>
     @endif
 
+    @if (session('error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: "{{ session('error') }}",
+                timer: 5000,
+                showConfirmButton: true
+            });
+        });
+    </script>
+    @endif
+
+    @if (session('info'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'info',
+                title: 'Info!',
+                text: "{{ session('info') }}",
+                timer: 3000,
+                showConfirmButton: false
+            });
+        });
+    </script>
+    @endif
+
     <!-- Tampilkan Riwayat Diagnosa Terbaru -->
     @if ($latestHistory)
     <div class="card mb-4 shadow-sm border-primary">
@@ -113,7 +141,14 @@
     @endif
 
     <!-- Tampilkan Daftar Riwayat Diagnosa dalam Bentuk Tabel -->
-    <h4 class="mt-4">Riwayat Diagnosa</h4>
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+        <h4 class="mb-0">Riwayat Diagnosa</h4>
+        @if($histories->count() > 0)
+        <button class="btn btn-danger btn-sm" id="deleteAllBtn">
+            <i class="fa fa-trash"></i> Hapus Semua Riwayat
+        </button>
+        @endif
+    </div>
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -212,6 +247,12 @@
     <div class="mt-3">
         {{ $histories->links('pagination::bootstrap-4') }}
     </div>
+
+    <!-- Form hidden untuk hapus semua riwayat -->
+    <form id="deleteAllForm" action="{{ route('history.destroyAll') }}" method="POST" class="d-none">
+        @csrf
+        @method('DELETE')
+    </form>
 </div>
 
 <!-- SweetAlert Script -->
@@ -238,11 +279,39 @@
                             deleteForm.submit();
                         } else {
                             console.error("Form delete tidak ditemukan!");
+                            Swal.fire('Error!', 'Form delete tidak ditemukan!', 'error');
                         }
                     }
                 });
             });
         });
+
+        // Hapus semua riwayat dengan konfirmasi SweetAlert
+        const deleteAllBtn = document.getElementById("deleteAllBtn");
+        if (deleteAllBtn) {
+            deleteAllBtn.addEventListener("click", function() {
+                Swal.fire({
+                    title: 'Yakin ingin menghapus semua riwayat?',
+                    text: "Semua riwayat diagnosa akan dihapus permanen dan tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, Hapus Semua!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const deleteAllForm = document.getElementById("deleteAllForm");
+                        if (deleteAllForm) {
+                            deleteAllForm.submit();
+                        } else {
+                            console.error("Form delete all tidak ditemukan!");
+                            Swal.fire('Error!', 'Form delete all tidak ditemukan!', 'error');
+                        }
+                    }
+                });
+            });
+        }
     });
 </script>
 @endsection

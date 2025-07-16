@@ -45,16 +45,38 @@ class HistoryController extends Controller
      */
     public function destroy($id)
     {
+        try {
+            // Dekripsi ID untuk keamanan
+            $decryptedId = decrypt($id);
 
-        // Dekripsi ID untuk keamanan
-        $decryptedId = decrypt($id);
+            // Cari riwayat diagnosa yang akan dihapus hanya jika milik user yang sedang login
+            $history = History::where('user_id', Auth::id())->findOrFail($decryptedId);
 
-        // Cari riwayat diagnosa yang akan dihapus hanya jika milik user yang sedang login
-        $history = History::where('user_id', Auth::id())->findOrFail($decryptedId);
+            // Hapus data
+            $history->delete();
 
-        // Hapus data
-        $history->delete();
+            return redirect()->route('history.index')->with('success', 'Riwayat diagnosa berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('history.index')->with('error', 'Gagal menghapus riwayat diagnosa. Error: ' . $e->getMessage());
+        }
+    }
 
-        return redirect()->route('history.index')->with('success', 'Riwayat diagnosa berhasil dihapus.');
+    /**
+     * Menghapus semua riwayat diagnosa pengguna.
+     */
+    public function destroyAll()
+    {
+        try {
+            // Ambil semua riwayat milik user yang sedang login
+            $deletedCount = History::where('user_id', Auth::id())->delete();
+
+            if ($deletedCount > 0) {
+                return redirect()->route('history.index')->with('success', "Berhasil menghapus {$deletedCount} riwayat diagnosa.");
+            } else {
+                return redirect()->route('history.index')->with('info', 'Tidak ada riwayat diagnosa yang dihapus.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('history.index')->with('error', 'Gagal menghapus semua riwayat diagnosa. Error: ' . $e->getMessage());
+        }
     }
 }
