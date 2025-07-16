@@ -23,15 +23,23 @@ class DiagnosisController extends Controller
     {
         $animals = Animal::all();
         $symptoms = [];
+        $totalSymptoms = 0;
 
-        // Jika ada animal_id, ambil gejala sesuai hewan
+        // Jika ada animal_id, ambil gejala sesuai hewan dengan paginasi
         if ($request->has('animal_id') && $request->animal_id) {
             $symptomIds = AnimalSymptom::where('animal_id', $request->animal_id)
                 ->pluck('symptom_id');
-            $symptoms = Symptom::whereIn('id', $symptomIds)->get();
+            
+            // Hitung total gejala untuk informasi paginasi
+            $totalSymptoms = Symptom::whereIn('id', $symptomIds)->count();
+            
+            // Ambil gejala dengan paginasi (10 per halaman)
+            $symptoms = Symptom::whereIn('id', $symptomIds)
+                ->paginate(10)
+                ->withQueryString(); // Mempertahankan parameter URL lainnya
         }
 
-        return view('diagnosis.index', compact('animals', 'symptoms'));
+        return view('diagnosis.index', compact('animals', 'symptoms', 'totalSymptoms'));
     }
 
 
@@ -63,6 +71,11 @@ class DiagnosisController extends Controller
             if ($value !== null && floatval($value) > 0) {
                 $filteredSymptoms[$symptomId] = $value;
             }
+        }
+        
+        // Validasi apakah ada gejala yang dipilih (nilai > 0)
+        if (empty($filteredSymptoms)) {
+            return redirect()->back()->with('error', 'Anda harus memilih setidaknya satu gejala dengan tingkat keyakinan lebih dari 0 (Tidak Tahu).');
         }
 
         // Ambil semua penyakit yang mungkin pada hewan ini

@@ -63,6 +63,18 @@
             });
     </script>
     @endif
+    
+    @if (session('error'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan',
+                    text: "{{ session('error') }}"
+                });
+            });
+    </script>
+    @endif
     <h3 class="mb-4 text-center text-primary">Diagnosis Ternak Ruminansia</h3>
     <p class="lead text-center mb-5">Silakan pilih kategori ruminansia terlebih dahulu, kemudian pilih gejala yang
         dialami ternak Anda dan tentukan tingkat keyakinan untuk setiap gejala.</p>
@@ -102,9 +114,14 @@
                 <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Pilih Gejala dan Tingkat Keyakinan</h5>
             </div>
             <div class="card-body">
+                <!-- Informasi paginasi -->
+                <div class="alert alert-info mb-3">
+                    <p class="mb-0">Menampilkan {{ $symptoms->count() }} dari {{ $totalSymptoms }} gejala (Halaman {{ $symptoms->currentPage() }} dari {{ $symptoms->lastPage() }})</p>
+                </div>
+                
                 @foreach ($symptoms as $symptom)
                 <div class="mb-4 p-3 border rounded-3 bg-light">
-                    <p class="fw-bold mb-3">{{ $loop->iteration }}. {{ $symptom->name }} ({{ $symptom->code }})</p>
+                    <p class="fw-bold mb-3">{{ ($symptoms->currentPage() - 1) * 10 + $loop->iteration }}. {{ $symptom->name }} ({{ $symptom->code }})</p>
                     <div class="option-box-container">
                         @php
                         $fuzzyValues = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
@@ -132,6 +149,11 @@
                     @enderror
                 </div>
                 @endforeach
+                
+                <!-- Pagination links -->
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $symptoms->links('pagination::bootstrap-4') }}
+                </div>
             </div>
         </div>
 
@@ -150,6 +172,8 @@
 </div>
 
 {{-- Font Awesome for icons --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" xintegrity="sha512-..."
-    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" crossorigin="anonymous"></script>
+
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection

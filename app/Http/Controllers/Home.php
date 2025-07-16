@@ -33,13 +33,21 @@ class Home extends Controller
     {
         $animals = Animal::all();
         $symptoms = [];
+        $totalSymptoms = 0;
 
         if ($request->has('animal_id') && $request->animal_id) {
             $symptomIds = AnimalSymptom::where('animal_id', $request->animal_id)->pluck('symptom_id');
-            $symptoms = Symptom::whereIn('id', $symptomIds)->get();
+            
+            // Hitung total gejala untuk informasi paginasi
+            $totalSymptoms = Symptom::whereIn('id', $symptomIds)->count();
+            
+            // Ambil gejala dengan paginasi (10 per halaman)
+            $symptoms = Symptom::whereIn('id', $symptomIds)
+                ->paginate(10)
+                ->withQueryString(); // Mempertahankan parameter URL lainnya
         }
 
-        return view('diagnosa.index', compact('animals', 'symptoms'));
+        return view('diagnosa.index', compact('animals', 'symptoms', 'totalSymptoms'));
     }
 
     /**
@@ -62,6 +70,11 @@ class Home extends Controller
             if ($value !== null && floatval($value) > 0) {
                 $filteredSymptoms[$symptomId] = $value;
             }
+        }
+        
+        // Validasi apakah ada gejala yang dipilih (nilai > 0)
+        if (empty($filteredSymptoms)) {
+            return redirect()->back()->with('error', 'Anda harus memilih setidaknya satu gejala dengan tingkat keyakinan lebih dari 0 (Tidak Tahu).');
         }
 
         // Ambil penyakit yang mungkin pada hewan ini

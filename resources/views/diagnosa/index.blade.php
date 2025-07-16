@@ -46,13 +46,27 @@
         </div>
 
         @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan',
+                    html: "{!! implode('<br>', $errors->all()) !!}"
+                });
+            });
+        </script>
+        @endif
+        
+        @if (session('error'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan',
+                    text: "{{ session('error') }}"
+                });
+            });
+        </script>
         @endif
 
         {{-- Form pilih hewan --}}
@@ -81,6 +95,11 @@
                     <h5 class="mb-0">Pilih Gejala dan Tingkat Keyakinan</h5>
                 </div>
                 <div class="card-body">
+                    <!-- Informasi paginasi -->
+                    <div class="alert alert-info mb-3">
+                        <p class="mb-0">Menampilkan {{ $symptoms->count() }} dari {{ $totalSymptoms }} gejala (Halaman {{ $symptoms->currentPage() }} dari {{ $symptoms->lastPage() }})</p>
+                    </div>
+                    
                     @php
                     $fuzzyValues = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
                     $fuzzyLabels = [
@@ -95,7 +114,7 @@
 
                     @foreach ($symptoms as $symptom)
                     <div class="mb-4 p-3 border rounded bg-light">
-                        <p class="fw-bold mb-2">{{ $loop->iteration }}. {{ $symptom->name }} <span
+                        <p class="fw-bold mb-2">{{ ($symptoms->currentPage() - 1) * 10 + $loop->iteration }}. {{ $symptom->name }} <span
                                 class="text-muted">({{ $symptom->code }})</span></p>
                         <div class="option-box-container">
                             @foreach ($fuzzyValues as $key => $value)
@@ -110,6 +129,11 @@
                         </div>
                     </div>
                     @endforeach
+                    
+                    <!-- Pagination links -->
+                    <div class="d-flex justify-content-center mt-4">
+                        {{ $symptoms->links('pagination::bootstrap-4') }}
+                    </div>
                 </div>
             </div>
 
@@ -125,6 +149,7 @@
     </div>
 </section>
 
-{{-- Font Awesome (untuk ikon jika belum include di layout) --}}
+{{-- Font Awesome dan SweetAlert2 --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endsection
