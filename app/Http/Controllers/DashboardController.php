@@ -9,6 +9,7 @@ use App\Models\Rule;
 use App\Models\History;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -81,19 +82,113 @@ class DashboardController extends Controller
             $chartDataBulanan[] = $found ? $found->jumlah : 0;
         }
 
-        // Penyakit dengan jumlah diagnosis terbanyak (optional, tidak digunakan di view ini)
-        $penyakitTeratas = History::select('disease_id', DB::raw('COUNT(*) as total'))
+        // Top 5 diseases - simple approach
+        $topDiseases = History::with('disease:id,name')
+            ->get()
             ->groupBy('disease_id')
-            ->orderByDesc('total')
-            ->with('disease')
-            ->limit(5)
-            ->get();
+            ->map(function ($histories) {
+                return [
+                    'disease' => $histories->first()->disease,
+                    'total' => $histories->count()
+                ];
+            })
+            ->sortByDesc('total')
+            ->take(5)
+            ->values();
 
-        // Riwayat diagnosa terbaru
+        // Average confidence by disease - simple approach
+        $confidenceByDisease = History::with('disease:id,name')
+            ->get()
+            ->groupBy('disease_id')
+            ->map(function ($histories) {
+                return [
+                    'disease' => $histories->first()->disease,
+                    'avg_confidence' => $histories->avg('confidence')
+                ];
+            })
+            ->sortByDesc('avg_confidence')
+            ->take(5)
+            ->values();
+
+        // User activity analytics - simple approach
+        $userActivity = History::with('user:id,name')
+            ->whereNotNull('user_id')
+            ->get()
+            ->groupBy('user_id')
+            ->map(function ($histories) {
+                return [
+                    'user' => $histories->first()->user,
+                    'diagnosis_count' => $histories->count(),
+                    'avg_confidence' => $histories->avg('confidence')
+                ];
+            })
+            ->sortByDesc('diagnosis_count')
+            ->take(10)
+            ->values();
+
+        // Symptom effectiveness (most used symptoms) - simplified
+        $topSymptoms = collect();
+        
+        try {
+            $historyRecords = History::whereNotNull('selected_symptoms')
+                ->where('selected_symptoms', '!=', '')
+                ->get();
+            
+            $allSymptoms = [];
+            foreach ($historyRecords as $record) {
+                if (is_array($record->selected_symptoms)) {
+                    $allSymptoms = array_merge($allSymptoms, array_keys($record->selected_symptoms));
+                }
+            }
+            
+            $symptomCounts = collect($allSymptoms)->countBy()->sortDesc()->take(5);
+            
+            if ($symptomCounts->isNotEmpty()) {
+                $symptomIds = $symptomCounts->keys()->toArray();
+                $symptoms = Symptom::whereIn('id', $symptomIds)->get()->keyBy('id');
+                $topSymptoms = $symptomCounts->map(function ($count, $id) use ($symptoms) {
+                    return [
+                        'name' => $symptoms[$id]->name ?? 'Unknown Symptom',
+                        'count' => $count
+                    ];
+                });
+            }
+        } catch (\Exception $e) {
+            $topSymptoms = collect();
+        }
+
+        // System performance metrics - simplified
+        $totalHistories = History::count();
+        $systemMetrics = [
+            'avg_confidence' => History::avg('confidence') ?? 0,
+            'total_sessions' => $totalHistories,
+            'unique_users' => History::distinct('user_id')->count('user_id'),
+            'diseases_detected' => History::distinct('disease_id')->count('disease_id'),
+            'high_confidence_rate' => $totalHistories > 0 ? (History::where('confidence', '>=', 0.8)->count() / $totalHistories * 100) : 0
+        ];
+
+        // Disease by animal type for donut chart - simplified
+        $diseaseByAnimal = History::with('animal:id,name')
+            ->get()
+            ->groupBy('animal_id')
+            ->map(function ($histories) {
+                return [
+                    'animal' => $histories->first()->animal,
+                    'count' => $histories->count()
+                ];
+            })
+            ->values();
+
+        // Recent diagnoses
         $recentDiagnoses = History::with(['user', 'animal', 'disease'])
             ->latest()
             ->take(10)
             ->get();
+
+        // Low confidence diagnoses (alerts)
+        $lowConfidenceDiagnoses = History::where('confidence', '<', 0.6)
+            ->where('created_at', '>=', now()->subDays(7))
+            ->count();
 
         return view('dashboard', compact(
             'jumlahHewan',
@@ -108,7 +203,14 @@ class DashboardController extends Controller
             'chartDataMingguan',
             'chartLabelsBulanan',
             'chartDataBulanan',
-            'recentDiagnoses'
+            'recentDiagnoses',
+            'topDiseases',
+            'confidenceByDisease',
+            'userActivity',
+            'topSymptoms',
+            'systemMetrics',
+            'diseaseByAnimal',
+            'lowConfidenceDiagnoses'
         ));
     }
 }
